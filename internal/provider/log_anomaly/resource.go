@@ -16,7 +16,7 @@ const (
 // Resource returns this packages resource.
 func Resource() *schema.Resource {
 	return &schema.Resource{
-		Create: Update,
+		Create: Create,
 		Read:   Read,
 		Update: Update,
 		Delete: Delete,
@@ -30,12 +30,10 @@ func Resource() *schema.Resource {
 			LogGroup: {
 				Type:     schema.TypeString,
 				Required: true,
-				ForceNew: true,
 			},
 			EvaluationFrequency: {
 				Type:     schema.TypeString,
 				Required: true,
-				ForceNew: true,
 			},
 		},
 	}

@@ -1,16 +1,14 @@
-Terraform Provider: S3 Remote
+Terraform Provider: Log Anomaly Detector
 =============================
 
-Terraform provider for deploying a remote file to AWS S3
+Terraform provider for deploying a log anomaly detector on a log group
 
 ## Usage
 
 ```hcl
-resource "aws_s3_bucket_object_remote" "function" {
-  bucket = "lambda-functions"
-  key    = "example.zip"
-
-  url  = "https://github.com/codedropau/example/releases/download/v0.0.1/function.zip"
-  hash = "xxxxxxxxxxxxxxxxxxxxxxxx"
+resource "aws_cloudwatch_log_anomaly_detector" "prod_logs" {
+    name = "prod-logs"
+    log_group = "arn:aws:logs:ap-southeast-2:022593270620:log-group:nmhp/vpc/flow"
+    evaluation_frequency = "15"
 }
 ```

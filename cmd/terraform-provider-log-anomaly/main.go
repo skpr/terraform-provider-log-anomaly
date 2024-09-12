@@ -12,8 +12,8 @@ import (
 )
 
 const (
-	// ResourceBucketObjectRemote provides a resource for storing remote files in S3.
-	ResourceBucketObjectRemote = "aws_s3_bucket_object_remote"
+	// ResourceLogAnomalyDetector provides a resource for setting up a log anomalt detector on a log group.
+	ResourceLogAnomalyDetector = "aws_cloudwatch_log_anomaly_detector"
 
 	// FieldRegion identifier for region field.
 	FieldRegion = "region"
@@ -53,7 +53,7 @@ func main() {
 					return session.NewSession(cfg)
 				},
 				ResourcesMap: map[string]*schema.Resource{
-					ResourceBucketObjectRemote: loganomaly.Resource(),
+					ResourceLogAnomalyDetector: loganomaly.Resource(),
 				},
 			}
 		},

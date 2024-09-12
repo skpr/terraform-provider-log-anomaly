@@ -5,14 +5,18 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/cloudwatchlogs"
 	"github.com/hashicorp/terraform/helper/schema"
+
 	"github.com/skpr/terraform-provider-log-anomaly/internal/provider/log_anomaly/transform"
 )
 
-// Update the log anomaly detector.
-func Update(d *schema.ResourceData, m interface{}) error {
+// Create the log anomaly detector.
+func Create(d *schema.ResourceData, m interface{}) error {
 	sess := m.(*session.Session)
 
-	c := cloudwatchlogs.New(sess)
+	var (
+		name     = d.Get(Name).(string)
+		logGroup = d.Get(LogGroup).(string)
+	)
 
 	evaluationFrequency, err := transform.ToApiValue(d.Get(EvaluationFrequency).(string))
 
@@ -20,15 +24,19 @@ func Update(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 
-	_, err = c.UpdateLogAnomalyDetector(&cloudwatchlogs.UpdateLogAnomalyDetectorInput{
-		AnomalyDetectorArn:  aws.String(d.Id()),
+	c := cloudwatchlogs.New(sess)
+
+	obj, err := c.CreateLogAnomalyDetector(&cloudwatchlogs.CreateLogAnomalyDetectorInput{
+		DetectorName:        aws.String(name),
+		LogGroupArnList:     aws.StringSlice([]string{logGroup}),
 		EvaluationFrequency: aws.String(evaluationFrequency),
-		Enabled:             aws.Bool(true),
 	})
 
 	if err != nil {
 		return err
 	}
+
+	d.SetId(*obj.AnomalyDetectorArn)
 
 	return nil
 }

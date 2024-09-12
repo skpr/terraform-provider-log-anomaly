@@ -6,7 +6,7 @@ import (
 	"github.com/hashicorp/terraform/helper/schema"
 )
 
-// Delete the S3 object.
+// Delete the log anomaly detector.
 func Delete(d *schema.ResourceData, m interface{}) error {
 	sess := m.(*session.Session)
 

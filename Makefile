@@ -3,7 +3,7 @@
 export CGO_ENABLED=0
 
 define build_step
-	GOOS=$(1) GOARCH=$(2) go build -o bin/terraform-provider-log-anomaly-$(1)-$(2) -ldflags='-extldflags "-static"' github.com/skpr/terraform-provider-log-anomaly/cmd/terraform-provider-log-anomaly
+	GOOS=$(1) GOARCH=$(2) go build -o bin/terraform-provider-loganomaly_$(1)-$(2) -ldflags='-extldflags "-static"' github.com/skpr/terraform-provider-log-anomaly/cmd/terraform-provider-log-anomaly
 endef
 
 # Builds the project.
