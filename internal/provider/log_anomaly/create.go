@@ -18,7 +18,7 @@ func Create(d *schema.ResourceData, m interface{}) error {
 		logGroup = d.Get(LogGroup).(string)
 	)
 
-	evaluationFrequency, err := transform.ToApiValue(d.Get(EvaluationFrequency).(string))
+	evaluationFrequency, err := transform.ToAPIValue(d.Get(EvaluationFrequency).(string))
 
 	if err != nil {
 		return err

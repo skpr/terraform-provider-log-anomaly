@@ -14,7 +14,7 @@ func Update(d *schema.ResourceData, m interface{}) error {
 
 	c := cloudwatchlogs.New(sess)
 
-	evaluationFrequency, err := transform.ToApiValue(d.Get(EvaluationFrequency).(string))
+	evaluationFrequency, err := transform.ToAPIValue(d.Get(EvaluationFrequency).(string))
 
 	if err != nil {
 		return err

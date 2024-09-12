@@ -2,8 +2,8 @@ package transform
 
 import "fmt"
 
-// GetEvaluationFrequency returns the evaluation frequency.
-func ToApiValue(evaluationFrequency string) (string, error) {
+// ToApiValue returns the evaluation frequency.
+func ToAPIValue(evaluationFrequency string) (string, error) {
 
 	switch evaluationFrequency {
 	case "5":
@@ -23,8 +23,8 @@ func ToApiValue(evaluationFrequency string) (string, error) {
 	}
 }
 
-// transformEvaluationFrequency returns the evaluation frequency.
-func FromApiValue(evaluationFrequency string) (string, error) {
+// FromApiValue returns the evaluation frequency.
+func FromAPIValue(evaluationFrequency string) (string, error) {
 
 	switch evaluationFrequency {
 	case "FIVE_MIN":

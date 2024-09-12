@@ -21,7 +21,7 @@ func Read(d *schema.ResourceData, m interface{}) error {
 		return errors.Wrap(err, "failed to get ID")
 	}
 
-	frequency, err := transform.FromApiValue(*obj.EvaluationFrequency)
+	frequency, err := transform.FromAPIValue(*obj.EvaluationFrequency)
 	if err != nil {
 		return err
 	}
