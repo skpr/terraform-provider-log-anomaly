@@ -2,7 +2,7 @@ package transform
 
 import "fmt"
 
-// ToApiValue returns the evaluation frequency.
+// ToAPIValue returns the evaluation frequency.
 func ToAPIValue(evaluationFrequency string) (string, error) {
 
 	switch evaluationFrequency {
@@ -23,7 +23,7 @@ func ToAPIValue(evaluationFrequency string) (string, error) {
 	}
 }
 
-// FromApiValue returns the evaluation frequency.
+// FromAPIValue returns the evaluation frequency.
 func FromAPIValue(evaluationFrequency string) (string, error) {
 
 	switch evaluationFrequency {
