@@ -1,12 +1,12 @@
 package main
 
 import (
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/credentials"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/hashicorp/terraform/plugin"
-	"github.com/hashicorp/terraform/terraform"
+	"context"
+
+	// "github.com/aws/aws-sdk-go-v2/aws/session"
+	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/plugin"
 
 	loganomaly "github.com/skpr/terraform-provider-log-anomaly/internal/provider/log_anomaly"
 )
@@ -23,39 +23,44 @@ const (
 
 func main() {
 	plugin.Serve(&plugin.ServeOpts{
-		ProviderFunc: func() terraform.ResourceProvider {
-			return &schema.Provider{
-				Schema: map[string]*schema.Schema{
-					FieldProfile: {
-						Type:        schema.TypeString,
-						Optional:    true,
-						DefaultFunc: schema.EnvDefaultFunc("AWS_PROFILE", ""),
-						Description: "AWS Profile for authentication.",
-					},
-					FieldRegion: {
-						Type:        schema.TypeString,
-						Optional:    true,
-						DefaultFunc: schema.EnvDefaultFunc("AWS_REGION", ""),
-						Description: "AWS Profile for authentication.",
-					},
-				},
-				ConfigureFunc: func(d *schema.ResourceData) (interface{}, error) {
-					cfg := &aws.Config{}
-
-					if v, ok := d.GetOk(FieldRegion); ok {
-						cfg.Region = aws.String(v.(string))
-					}
-
-					if v, ok := d.GetOk(FieldProfile); ok {
-						cfg.Credentials = credentials.NewSharedCredentials("", v.(string))
-					}
-
-					return session.NewSession(cfg)
-				},
-				ResourcesMap: map[string]*schema.Resource{
-					ResourceLogAnomalyDetector: loganomaly.Resource(),
-				},
-			}
-		},
+		ProviderFunc: provider,
 	})
+}
+
+func provider() *schema.Provider {
+	return &schema.Provider{
+		Schema: map[string]*schema.Schema{
+			FieldProfile: {
+				Type:        schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc("AWS_PROFILE", ""),
+				Description: "AWS Profile for authentication.",
+			},
+			FieldRegion: {
+				Type:        schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc("AWS_REGION", ""),
+				Description: "AWS Profile for authentication.",
+			},
+		},
+		ConfigureFunc: func(d *schema.ResourceData) (interface{}, error) {
+			var (
+				region  string
+				profile string
+			)
+
+			if v, ok := d.GetOk(FieldRegion); ok {
+				region = v.(string)
+			}
+
+			if v, ok := d.GetOk(FieldProfile); ok {
+				profile = v.(string)
+			}
+
+			return config.LoadDefaultConfig(context.TODO(), config.WithRegion(region), config.WithSharedConfigProfile(profile))
+		},
+		ResourcesMap: map[string]*schema.Resource{
+			ResourceLogAnomalyDetector: loganomaly.Resource(),
+		},
+	}
 }

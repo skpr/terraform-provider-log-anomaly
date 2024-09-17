@@ -1,20 +1,26 @@
 package loganomaly
 
 import (
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/cloudwatchlogs"
-	"github.com/hashicorp/terraform/helper/schema"
+	// "github.com/aws/aws-sdk-go-v2/aws/session"
+
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/cloudwatchlogs"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 // Delete the log anomaly detector.
 func Delete(d *schema.ResourceData, m interface{}) error {
-	sess := m.(*session.Session)
+	cfg := m.(aws.Config)
+	c := cloudwatchlogs.NewFromConfig(cfg)
 
-	c := cloudwatchlogs.New(sess)
-
-	_, err := c.DeleteLogAnomalyDetector(&cloudwatchlogs.DeleteLogAnomalyDetectorInput{
-		AnomalyDetectorArn: &d.State().ID,
-	})
+	_, err := c.DeleteLogAnomalyDetector(
+		context.TODO(),
+		&cloudwatchlogs.DeleteLogAnomalyDetectorInput{
+			AnomalyDetectorArn: &d.State().ID,
+		},
+	)
 	if err != nil {
 		return err
 	}

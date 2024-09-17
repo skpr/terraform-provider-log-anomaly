@@ -1,32 +1,42 @@
 package transform
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/aws/aws-sdk-go-v2/service/cloudwatchlogs/types"
+)
+
+type EvaluationFrequency types.EvaluationFrequency
 
 // ToAPIValue returns the evaluation frequency.
-func ToAPIValue(evaluationFrequency string) (string, error) {
+func ToAPIValue(evaluationFrequency string) (types.EvaluationFrequency, error) {
 
 	switch evaluationFrequency {
+	case "1":
+		return types.EvaluationFrequencyOneMin, nil
 	case "5":
-		return "FIVE_MIN", nil
+		return types.EvaluationFrequencyFiveMin, nil
 	case "10":
-		return "TEN_MIN", nil
+		return types.EvaluationFrequencyTenMin, nil
 	case "15":
-		return "FIFTEEN_MIN", nil
+		return types.EvaluationFrequencyFifteenMin, nil
 	case "30":
-		return "THIRTY_MIN", nil
+		return types.EvaluationFrequencyThirtyMin, nil
 	case "60":
-		return "ONE_HOUR", nil
+		return types.EvaluationFrequencyOneHour, nil
 	case "":
-		return "FIVE_MIN", nil
+		return types.EvaluationFrequencyFiveMin, nil
 	default:
 		return "", fmt.Errorf("invalid evaluation frequency, use 5, 10, 15, 30 or 60")
 	}
 }
 
 // FromAPIValue returns the evaluation frequency.
-func FromAPIValue(evaluationFrequency string) (string, error) {
+func FromAPIValue(evaluationFrequency types.EvaluationFrequency) (string, error) {
 
 	switch evaluationFrequency {
+	case "ONE_MIN":
+		return "1", nil
 	case "FIVE_MIN":
 		return "5", nil
 	case "TEN_MIN":
