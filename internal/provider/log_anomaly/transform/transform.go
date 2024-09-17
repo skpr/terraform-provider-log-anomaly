@@ -6,8 +6,6 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/cloudwatchlogs/types"
 )
 
-type EvaluationFrequency types.EvaluationFrequency
-
 // ToAPIValue returns the evaluation frequency.
 func ToAPIValue(evaluationFrequency string) (types.EvaluationFrequency, error) {
 
