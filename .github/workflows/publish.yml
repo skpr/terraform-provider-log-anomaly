@@ -5,6 +5,10 @@ on:
     tags:
       - v0.*
 
+env:
+  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+  DOCKER_PASS: ${{ secrets.DOCKER_PASS }}
+
 jobs:
   artifacts:
     runs-on: ubuntu-latest
@@ -28,3 +32,11 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: bin/*
+
+      - name: Build Image
+        run: make package tag=${{ github.ref_name }}
+
+      - name: Publish Image
+        run: |
+          echo "$DOCKER_PASS" | docker login --username $DOCKER_USERNAME --password-stdin
+          make push tag=${{ github.ref_name }}
