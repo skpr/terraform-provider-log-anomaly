@@ -20,11 +20,3 @@ test:
 	go test -cover ./...
 
 .PHONY: *
-
-package:
-	docker build -t docker.io/skpr/terraform-provider-log-anomaly:$(tag) .
-	docker tag docker.io/skpr/terraform-provider-log-anomaly:$(tag) docker.io/skpr/terraform-provider-log-anomaly:latest
-
-push:
-	docker push docker.io/skpr/terraform-provider-log-anomaly:latest
-	docker push docker.io/skpr/terraform-provider-log-anomaly:$(tag)
