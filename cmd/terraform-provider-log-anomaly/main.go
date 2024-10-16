@@ -5,15 +5,20 @@ import (
 
 	// "github.com/aws/aws-sdk-go-v2/aws/session"
 	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/plugin"
 
 	loganomaly "github.com/skpr/terraform-provider-log-anomaly/internal/provider/log_anomaly"
+	loggroup "github.com/skpr/terraform-provider-log-anomaly/internal/provider/log_group"
 )
 
 const (
 	// ResourceLogAnomalyDetector provides a resource for setting up a log anomalt detector on a log group.
 	ResourceLogAnomalyDetector = "aws_cloudwatch_log_anomaly_detector"
+
+	// ResourceLogGroup provides a resource for setting up a log group.
+	ResourceLogGroup = "aws_cloudwatch_log_group"
 
 	// FieldRegion identifier for region field.
 	FieldRegion = "region"
@@ -28,6 +33,7 @@ func main() {
 }
 
 func provider() *schema.Provider {
+	ctx := context.Background()
 	return &schema.Provider{
 		Schema: map[string]*schema.Schema{
 			FieldProfile: {
@@ -44,6 +50,7 @@ func provider() *schema.Provider {
 			},
 		},
 		ConfigureFunc: func(d *schema.ResourceData) (interface{}, error) {
+			tflog.Info(ctx, "Configuring provider log anomaly detector")
 			var (
 				region  string
 				profile string
@@ -57,10 +64,11 @@ func provider() *schema.Provider {
 				profile = v.(string)
 			}
 
-			return config.LoadDefaultConfig(context.TODO(), config.WithRegion(region), config.WithSharedConfigProfile(profile))
+			return config.LoadDefaultConfig(ctx, config.WithRegion(region), config.WithSharedConfigProfile(profile))
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			ResourceLogAnomalyDetector: loganomaly.Resource(),
+			ResourceLogGroup:           loggroup.Resource(),
 		},
 	}
 }
