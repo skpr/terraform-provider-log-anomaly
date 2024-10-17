@@ -10,7 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-// Delete the log anomaly detector.
+// Delete the log group
 func Delete(d *schema.ResourceData, m interface{}) error {
 	cfg := m.(aws.Config)
 	c := cloudwatchlogs.NewFromConfig(cfg)

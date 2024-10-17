@@ -12,7 +12,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-// Read the log anomaly detector.
+// Read the log group.
 func Read(d *schema.ResourceData, m interface{}) error {
 	cfg := m.(aws.Config)
 	c := cloudwatchlogs.NewFromConfig(cfg)
@@ -26,11 +26,9 @@ func Read(d *schema.ResourceData, m interface{}) error {
 		d.SetId("")
 		return err
 	}
-	// logGroupName = TrimLogGroupARNWildcardSuffix(aws.ToString(lg.Arn))
 
 	d.SetId(TrimLogGroupARNWildcardSuffix(aws.ToString(lg.Arn)))
 	d.Set(Name, logGroupName)
-	d.Set(RetentionInDays, lg.RetentionInDays)
 
 	return nil
 }
