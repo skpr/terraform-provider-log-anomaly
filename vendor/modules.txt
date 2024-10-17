@@ -4,6 +4,33 @@ github.com/agext/levenshtein
 # github.com/apparentlymart/go-textseg/v15 v15.0.0
 ## explicit; go 1.16
 github.com/apparentlymart/go-textseg/v15/textseg
+# github.com/aws/aws-sdk-go v1.55.5
+## explicit; go 1.19
+github.com/aws/aws-sdk-go/aws
+github.com/aws/aws-sdk-go/aws/awserr
+github.com/aws/aws-sdk-go/aws/awsutil
+github.com/aws/aws-sdk-go/aws/client
+github.com/aws/aws-sdk-go/aws/client/metadata
+github.com/aws/aws-sdk-go/aws/credentials
+github.com/aws/aws-sdk-go/aws/endpoints
+github.com/aws/aws-sdk-go/aws/request
+github.com/aws/aws-sdk-go/aws/signer/v4
+github.com/aws/aws-sdk-go/internal/context
+github.com/aws/aws-sdk-go/internal/ini
+github.com/aws/aws-sdk-go/internal/sdkio
+github.com/aws/aws-sdk-go/internal/sdkmath
+github.com/aws/aws-sdk-go/internal/sdkrand
+github.com/aws/aws-sdk-go/internal/shareddefaults
+github.com/aws/aws-sdk-go/internal/strings
+github.com/aws/aws-sdk-go/internal/sync/singleflight
+github.com/aws/aws-sdk-go/private/protocol
+github.com/aws/aws-sdk-go/private/protocol/eventstream
+github.com/aws/aws-sdk-go/private/protocol/eventstream/eventstreamapi
+github.com/aws/aws-sdk-go/private/protocol/json/jsonutil
+github.com/aws/aws-sdk-go/private/protocol/jsonrpc
+github.com/aws/aws-sdk-go/private/protocol/rest
+github.com/aws/aws-sdk-go/service/cloudwatchlogs
+github.com/aws/aws-sdk-go/service/cloudwatchlogs/cloudwatchlogsiface
 # github.com/aws/aws-sdk-go-v2 v1.30.5
 ## explicit; go 1.21
 github.com/aws/aws-sdk-go-v2/aws
@@ -109,9 +136,15 @@ github.com/aws/smithy-go/sync
 github.com/aws/smithy-go/time
 github.com/aws/smithy-go/transport/http
 github.com/aws/smithy-go/transport/http/internal/io
+# github.com/davecgh/go-spew v1.1.1
+## explicit
+github.com/davecgh/go-spew/spew
 # github.com/fatih/color v1.16.0
 ## explicit; go 1.17
 github.com/fatih/color
+# github.com/golang/mock v1.6.0
+## explicit; go 1.11
+github.com/golang/mock/gomock
 # github.com/golang/protobuf v1.5.4
 ## explicit; go 1.17
 github.com/golang/protobuf/proto
@@ -207,6 +240,9 @@ github.com/hashicorp/terraform-svchost
 # github.com/hashicorp/yamux v0.1.1
 ## explicit; go 1.15
 github.com/hashicorp/yamux
+# github.com/jmespath/go-jmespath v0.4.0
+## explicit; go 1.14
+github.com/jmespath/go-jmespath
 # github.com/mattn/go-colorable v0.1.13
 ## explicit; go 1.15
 github.com/mattn/go-colorable
@@ -234,6 +270,12 @@ github.com/oklog/run
 # github.com/pkg/errors v0.9.1
 ## explicit
 github.com/pkg/errors
+# github.com/pmezard/go-difflib v1.0.0
+## explicit
+github.com/pmezard/go-difflib/difflib
+# github.com/stretchr/testify v1.7.2
+## explicit; go 1.13
+github.com/stretchr/testify/assert
 # github.com/vmihailenco/msgpack v4.0.4+incompatible
 ## explicit
 github.com/vmihailenco/msgpack
@@ -416,3 +458,6 @@ google.golang.org/protobuf/types/known/emptypb
 google.golang.org/protobuf/types/known/timestamppb
 # gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15
 ## explicit
+# gopkg.in/yaml.v3 v3.0.1
+## explicit
+gopkg.in/yaml.v3
