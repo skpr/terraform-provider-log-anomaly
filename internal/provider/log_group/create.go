@@ -16,16 +16,16 @@ func Create(d *schema.ResourceData, m interface{}) error {
 	c := cloudwatchlogs.NewFromConfig(cfg)
 
 	var (
-		name = d.Get(Name).(string)
-		ctx  = context.TODO()
+		name      = d.Get(Name).(string)
+		ctx       = context.TODO()
+		exception *types.ResourceAlreadyExistsException
 	)
 
 	_, err := c.CreateLogGroup(context.TODO(), &cloudwatchlogs.CreateLogGroupInput{
 		LogGroupName: aws.String(name),
 	})
 
-	var exception *types.ResourceAlreadyExistsException
-	if !errors.As(err, &exception) {
+	if !errors.As(err, &exception) && err != nil {
 		return err
 	}
 
