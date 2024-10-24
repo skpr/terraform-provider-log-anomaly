@@ -2,11 +2,11 @@ package loggroup
 
 import (
 	"context"
-	"strings"
+	"errors"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/cloudwatchlogs"
-	"github.com/hashicorp/terraform-plugin-log/tflog"
+	"github.com/aws/aws-sdk-go-v2/service/cloudwatchlogs/types"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -17,20 +17,22 @@ func Create(d *schema.ResourceData, m interface{}) error {
 
 	var (
 		name = d.Get(Name).(string)
+		ctx  = context.TODO()
 	)
 
 	_, err := c.CreateLogGroup(context.TODO(), &cloudwatchlogs.CreateLogGroupInput{
 		LogGroupName: aws.String(name),
 	})
 
-	if err != nil {
-		tflog.Error(context.TODO(), "Error creating log group")
-		if !strings.Contains(err.Error(), "ResourceAlreadyExistsException") {
-			return err
-		}
+	var exception *types.ResourceAlreadyExistsException
+	if !errors.As(err, &exception) {
+		return err
 	}
 
-	lg, _ := findLogGroupByName(context.TODO(), c, name)
+	lg, err := findLogGroupByName(ctx, c, name)
+	if err != nil {
+		return err
+	}
 
 	d.Set(Name, name)
 	d.SetId(TrimLogGroupARNWildcardSuffix(aws.ToString(lg.Arn)))

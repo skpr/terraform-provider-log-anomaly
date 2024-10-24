@@ -21,7 +21,6 @@ func Resource() *schema.Resource {
 			Name: {
 				Type:     schema.TypeString,
 				Required: true,
-				ForceNew: true,
 			},
 		},
 	}
