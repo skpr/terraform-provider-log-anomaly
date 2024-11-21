@@ -7,7 +7,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-// Update the log group.
+// Delete the log group.
 func Delete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 
 	return diag.Diagnostics{}
