@@ -28,12 +28,12 @@ func Create(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Dia
 	})
 
 	if !errors.As(err, &exception) && err != nil {
-		return diags
+		return diag.FromErr(err)
 	}
 
 	lg, err := findLogGroupByName(ctx, c, name)
 	if err != nil {
-		return diags
+		return diag.FromErr(err)
 	}
 
 	d.Set(Name, name)
