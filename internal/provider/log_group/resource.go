@@ -12,9 +12,8 @@ const (
 // Resource returns this packages resource.
 func Resource() *schema.Resource {
 	return &schema.Resource{
-		Create: Create,
-		Read:   Read,
-		Update: Update,
+		CreateContext: Create,
+		ReadContext:   Read,
 
 		Schema: map[string]*schema.Schema{
 			Name: {
