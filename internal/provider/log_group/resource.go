@@ -5,30 +5,21 @@ import (
 )
 
 const (
-	// Name of the anomaly detector
+	// Name of the log group
 	Name = "name"
-	// LogGroup ARN that needs anomaly detection setup for.
-	RetentionInDays = "retention_in_days"
-	// EvaluationFrequency in minutes for the anomaly detector.
-	EvaluationFrequency = "evaluation_frequency"
 )
 
 // Resource returns this packages resource.
 func Resource() *schema.Resource {
 	return &schema.Resource{
-		Create: Create,
-		Read:   Read,
-		Update: Update,
-		Delete: Delete,
+		CreateContext: Create,
+		ReadContext:   Read,
+		UpdateContext: Update,
+		DeleteContext: Delete,
 
 		Schema: map[string]*schema.Schema{
 			Name: {
 				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
-			},
-			RetentionInDays: {
-				Type:     schema.TypeInt,
 				Required: true,
 			},
 		},

@@ -9,30 +9,31 @@ import (
 	// "github.com/aws/aws-sdk-go-v2/aws/session"
 	"github.com/aws/aws-sdk-go-v2/service/cloudwatchlogs"
 	"github.com/aws/aws-sdk-go-v2/service/cloudwatchlogs/types"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-// Read the log anomaly detector.
-func Read(d *schema.ResourceData, m interface{}) error {
+// Read the log group.
+func Read(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	var diags diag.Diagnostics
+
 	cfg := m.(aws.Config)
 	c := cloudwatchlogs.NewFromConfig(cfg)
 
 	logGroupName := d.Get("name").(string)
 
-	lg, err := findLogGroupByName(context.TODO(), c, logGroupName)
+	lg, err := findLogGroupByName(ctx, c, logGroupName)
 
 	if !d.IsNewResource() && err != nil {
 		log.Printf("[WARN] CloudWatch Logs Log Group (%s) not found, removing from state", d.Id())
 		d.SetId("")
-		return err
+		return diag.FromErr(err)
 	}
-	// logGroupName = TrimLogGroupARNWildcardSuffix(aws.ToString(lg.Arn))
 
 	d.SetId(TrimLogGroupARNWildcardSuffix(aws.ToString(lg.Arn)))
 	d.Set(Name, logGroupName)
-	d.Set(RetentionInDays, lg.RetentionInDays)
 
-	return nil
+	return diags
 }
 
 func findLogGroupByName(ctx context.Context, conn *cloudwatchlogs.Client, name string) (*types.LogGroup, error) {

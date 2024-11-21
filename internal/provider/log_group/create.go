@@ -2,54 +2,42 @@ package loggroup
 
 import (
 	"context"
-	"strings"
+	"errors"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/cloudwatchlogs"
-	"github.com/hashicorp/terraform-plugin-log/tflog"
+	"github.com/aws/aws-sdk-go-v2/service/cloudwatchlogs/types"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-// Create the log anomaly detector.
-func Create(d *schema.ResourceData, m interface{}) error {
+// Create the log group.
+func Create(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	cfg := m.(aws.Config)
 	c := cloudwatchlogs.NewFromConfig(cfg)
 
 	var (
-		name            = d.Get(Name).(string)
-		retentionInDays = d.Get(RetentionInDays).(int)
-		// region          = d.Get(Region).(string)
-		// accountID       = d.Get(AccountID).(string)
+		name      = d.Get(Name).(string)
+		exception *types.ResourceAlreadyExistsException
+		// Warning or errors can be collected in a slice type
+		diags diag.Diagnostics
 	)
-
-	if retentionInDays < 1 {
-		retentionInDays = 90
-	}
 
 	_, err := c.CreateLogGroup(context.TODO(), &cloudwatchlogs.CreateLogGroupInput{
 		LogGroupName: aws.String(name),
 	})
 
-	if err != nil {
-		tflog.Error(context.TODO(), "Error creating log group")
-		if !strings.Contains(err.Error(), "ResourceAlreadyExistsException") {
-			return err
-		}
+	if !errors.As(err, &exception) && err != nil {
+		return diag.FromErr(err)
 	}
 
-	_, err = c.PutRetentionPolicy(context.TODO(), &cloudwatchlogs.PutRetentionPolicyInput{
-		LogGroupName:    aws.String(name),
-		RetentionInDays: aws.Int32(int32(retentionInDays)),
-	})
-
+	lg, err := findLogGroupByName(ctx, c, name)
 	if err != nil {
-		return err
+		return diag.FromErr(err)
 	}
 
-	lg, _ := findLogGroupByName(context.TODO(), c, name)
-
-	d.Set("log_group_name", name)
+	d.Set(Name, name)
 	d.SetId(TrimLogGroupARNWildcardSuffix(aws.ToString(lg.Arn)))
 
-	return nil
+	return diags
 }

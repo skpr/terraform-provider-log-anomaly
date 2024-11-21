@@ -2,40 +2,43 @@ package loggroup
 
 import (
 	"context"
+	"errors"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
-	// "github.com/aws/aws-sdk-go-v2/aws/session"
 	"github.com/aws/aws-sdk-go-v2/service/cloudwatchlogs"
+	"github.com/aws/aws-sdk-go-v2/service/cloudwatchlogs/types"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-// Update the log anomaly detector.
-func Update(d *schema.ResourceData, m interface{}) error {
+// Update the log group.
+func Update(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+
 	cfg := m.(aws.Config)
 	c := cloudwatchlogs.NewFromConfig(cfg)
 
-	var rid int
-	if d.Get(RetentionInDays).(int) < 1 {
-		rid = 90
-	} else {
-		rid = d.Get(RetentionInDays).(int)
+	var (
+		name      = d.Get(Name).(string)
+		exception *types.ResourceAlreadyExistsException
+		// Warning or errors can be collected in a slice type
+		diags diag.Diagnostics
+	)
+
+	_, err := c.CreateLogGroup(context.TODO(), &cloudwatchlogs.CreateLogGroupInput{
+		LogGroupName: aws.String(name),
+	})
+
+	if !errors.As(err, &exception) && err != nil {
+		return diag.FromErr(err)
 	}
 
-	logGroupName := d.Get("name").(string)
-
-	if d.HasChange(RetentionInDays) {
-		_, err := c.PutRetentionPolicy(
-			context.TODO(),
-			&cloudwatchlogs.PutRetentionPolicyInput{
-				LogGroupName:    &logGroupName,
-				RetentionInDays: aws.Int32(int32(rid)),
-			},
-		)
-
-		if err != nil {
-			return err
-		}
+	lg, err := findLogGroupByName(ctx, c, name)
+	if err != nil {
+		return diag.FromErr(err)
 	}
 
-	return nil
+	d.Set(Name, name)
+	d.SetId(TrimLogGroupARNWildcardSuffix(aws.ToString(lg.Arn)))
+
+	return diags
 }
