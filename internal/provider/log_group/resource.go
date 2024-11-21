@@ -15,7 +15,6 @@ func Resource() *schema.Resource {
 		Create: Create,
 		Read:   Read,
 		Update: Update,
-		Delete: Delete,
 
 		Schema: map[string]*schema.Schema{
 			Name: {
