@@ -14,6 +14,8 @@ func Resource() *schema.Resource {
 	return &schema.Resource{
 		CreateContext: Create,
 		ReadContext:   Read,
+		UpdateContext: Update,
+		DeleteContext: Delete,
 
 		Schema: map[string]*schema.Schema{
 			Name: {
